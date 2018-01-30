@@ -1,7 +1,7 @@
 package com.test.students.controllers;
 
-import com.test.students.controllers.rbc.RbcClass;
 import com.test.students.core.entities.Class;
+import com.test.students.core.entities.Student;
 import com.test.students.core.services.ClassService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,8 +32,7 @@ public class ClassController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<Class> createClass(@RequestBody RbcClass rbcClass) {
-        Class classEntity = new Class(rbcClass.getTitle(), rbcClass.getDescription());
+    public ResponseEntity<Class> createClass(@RequestBody Class classEntity) {
         Class classPersisted = classService.createClass(classEntity);
 
         final HttpHeaders headers = new HttpHeaders();
@@ -41,9 +40,12 @@ public class ClassController {
         return new ResponseEntity<Class>(classPersisted, headers, HttpStatus.CREATED);
     }
 
-    @RequestMapping(method = RequestMethod.PUT)
-    public Class editClass(@RequestBody Class classEntity) {
-        return new Class("title edited", "description edited");
+    @RequestMapping(value = "/{classId}", method = RequestMethod.PUT)
+    public ResponseEntity<Void> editStudent(@RequestBody Class classEntity,
+                                            @PathVariable("classId") final String id) {
+        Class studentUpdated = classService.updateClass(Long.parseLong(id), classEntity);
+
+        return ResponseEntity.noContent().build();
     }
 
     @RequestMapping(value = "/{classId}", method = RequestMethod.DELETE)
@@ -57,5 +59,12 @@ public class ClassController {
 
         // Note this return 204/No Content regardless the class has actually been deleted or not, to be idempotent
         return ResponseEntity.noContent().build();
+    }
+
+    @RequestMapping(value = "/{classId}/students", method = RequestMethod.GET)
+    public List<Student> listStudentsByClass(@PathVariable("classId") final String id) {
+        Class classEntity = classService.findOne(Long.parseLong(id));
+
+        return classEntity.getStudents();
     }
 }

@@ -1,6 +1,5 @@
 package com.test.students.core.services;
 
-import com.test.students.controllers.rbc.RbcStudent;
 import com.test.students.core.entities.Student;
 
 import java.util.List;
@@ -11,7 +10,7 @@ public interface StudentService {
 
     Student createStudent(Student student);
 
-    Student updateStudent(Long id, RbcStudent rbcStudent);
+    Student updateStudent(Long id, Student student);
 
     void removeStudent(Student student);
 

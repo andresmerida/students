@@ -1,6 +1,5 @@
 package com.test.students.core.services.impl;
 
-import com.test.students.controllers.rbc.RbcClass;
 import com.test.students.core.entities.Class;
 import com.test.students.core.repositories.ClassRepository;
 import com.test.students.core.services.ClassService;
@@ -30,11 +29,11 @@ public class ClassServiceImpl implements ClassService {
     }
 
     @Override
-    public Class updateClass(Long id, RbcClass rbcClass) {
+    public Class updateClass(Long id, Class classEntity) {
         Class classModified = classRepository.findOne(id);
 
-        classModified.setTitle(rbcClass.getTitle());
-        classModified.setDescription(rbcClass.getDescription());
+        classModified.setTitle(classEntity.getTitle());
+        classModified.setDescription(classEntity.getDescription());
 
         return classRepository.save(classModified);
     }

@@ -1,6 +1,5 @@
 package com.test.students.core.services;
 
-import com.test.students.controllers.rbc.RbcClass;
 import com.test.students.core.entities.Class;
 
 import java.util.List;
@@ -11,7 +10,7 @@ public interface ClassService {
 
     Class createClass(Class classEntity);
 
-    Class updateClass(Long id, RbcClass rbcClass);
+    Class updateClass(Long id, Class classEntity);
 
     void removeClass(Class classEntity);
 

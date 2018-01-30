@@ -1,6 +1,6 @@
 package com.test.students.controllers;
 
-import com.test.students.controllers.rbc.RbcStudent;
+import com.test.students.core.entities.Class;
 import com.test.students.core.entities.Student;
 import com.test.students.core.services.StudentService;
 import org.slf4j.Logger;
@@ -32,8 +32,7 @@ public class StudentController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<Student> createStudent(@RequestBody RbcStudent rbcStudent) {
-        Student student = new Student(rbcStudent.getFirstName(), rbcStudent.getLastName());
+    public ResponseEntity<Student> createStudent(@RequestBody Student student) {
         Student studentPersisted = studentService.createStudent(student);
 
         final HttpHeaders headers = new HttpHeaders();
@@ -51,9 +50,9 @@ public class StudentController {
     }
 
     @RequestMapping(value = "/{studentId}", method = RequestMethod.PUT)
-    public ResponseEntity<Void> editStudent(@RequestBody RbcStudent rbcStudent,
+    public ResponseEntity<Void> editStudent(@RequestBody Student student,
                                             @PathVariable("studentId") final String id) {
-        Student studentUpdated = studentService.updateStudent(Long.parseLong(id), rbcStudent);
+        Student studentUpdated = studentService.updateStudent(Long.parseLong(id), student);
 
         return ResponseEntity.noContent().build();
     }
@@ -69,5 +68,12 @@ public class StudentController {
 
         // Note this return 204/No Content regardless the class has actually been deleted or not, to be idempotent
         return ResponseEntity.noContent().build();
+    }
+
+    @RequestMapping(value = "/{studentId}/classes", method = RequestMethod.GET)
+    public List<Class> listStudentsByClass(@PathVariable("studentId") final String id) {
+        Student studentEntity = studentService.findOne(Long.parseLong(id));
+
+        return studentEntity.getClasses();
     }
 }

@@ -1,6 +1,5 @@
 package com.test.students.core.services.impl;
 
-import com.test.students.controllers.rbc.RbcStudent;
 import com.test.students.core.entities.Student;
 import com.test.students.core.repositories.StudentRepository;
 import com.test.students.core.services.StudentService;
@@ -31,11 +30,11 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public Student updateStudent(Long id, RbcStudent rbcStudent) {
+    public Student updateStudent(Long id, Student student) {
         Student studentModified = studentRepository.findOne(id);
 
-        studentModified.setFirstName(rbcStudent.getFirstName());
-        studentModified.setLastName(rbcStudent.getLastName());
+        studentModified.setFirstName(student.getFirstName());
+        studentModified.setLastName(student.getLastName());
 
         return studentRepository.save(studentModified);
     }

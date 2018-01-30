@@ -4,12 +4,15 @@ import com.test.students.core.entities.Class;
 import com.test.students.core.entities.Student;
 import com.test.students.core.repositories.ClassRepository;
 import com.test.students.core.repositories.StudentRepository;
+import com.test.students.core.utils.SingleInstanceStudent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+import static java.util.Arrays.asList;
 
 @SpringBootApplication
 public class StudentSolution implements CommandLineRunner {
@@ -32,16 +35,21 @@ public class StudentSolution implements CommandLineRunner {
             if (args.length == 0) { // we don't need arguments
 
                 final Student[] students = {
-                        studentRepository.save(new Student("Andres", "Merida")),
-                        studentRepository.save(new Student("Ana", "Arevalo")),
-                        studentRepository.save(new Student("Juan", "Perez")),
-                        studentRepository.save(new Student("Armando", "Carpas"))
+                        studentRepository.save(SingleInstanceStudent.getInstance()
+                                .getInstanceStudent("Andres", "Merida")),
+                        studentRepository.save(SingleInstanceStudent.getInstance()
+                                .getInstanceStudent("Ana", "Arevalo")),
+                        studentRepository.save(SingleInstanceStudent.getInstance()
+                                .getInstanceStudent("Juan", "Perez")),
+                        studentRepository.save(SingleInstanceStudent.getInstance()
+                                .getInstanceStudent("Armando", "Carpas"))
                 };
 
                 final Class[] classes = {
-                        classRepository.save(new Class("English", "Engish class")),
-                        classRepository.save(new Class("Intro 101", "Basic programation")),
-                        classRepository.save(new Class("Intro 102", "Basic programation 2"))
+                        classRepository.save(new Class("English", "English Course",
+                                asList(students[0], students[1]))),
+                        classRepository.save(new Class("Intro Progra", "Programation basic",
+                                asList(students[2], students[3])))
                 };
 
                 LOG.info("Added {} Students, and {} Classes", students.length, classes.length);
