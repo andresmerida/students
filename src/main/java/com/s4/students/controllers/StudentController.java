@@ -7,7 +7,6 @@ import com.s4.students.core.utils.SearchCriteria;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,7 +31,8 @@ public class StudentController {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public List<Student> listAllStudents(@RequestParam(value = "search", required = false) String search) {
+    public ResponseEntity<List<Student>> listAllStudents(@RequestParam(value = "search",
+            required = false) String search) {
         if (search != null) {
             List<SearchCriteria> params = new ArrayList<SearchCriteria>();
             Pattern pattern = Pattern.compile("(\\w+?)(:|<|>)(\\w+?),");
@@ -42,57 +42,72 @@ public class StudentController {
             }
 
             LOG.debug("search students...");
-            return studentService.searchStudents(params);
+            return new ResponseEntity<List<Student>>(studentService.searchStudents(params), HttpStatus.OK);
         } else {
             LOG.debug("get all students");
-            return studentService.getAllStudents();
+            return new ResponseEntity<List<Student>>(studentService.getAll(), HttpStatus.OK);
         }
     }
 
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<Student> createStudent(@RequestBody Student student) {
-        Student studentPersisted = studentService.createStudent(student);
+        Student studentPersisted = studentService.save(student);
+        LOG.debug("Added:: " + student);
 
-        final HttpHeaders headers = new HttpHeaders();
-
-        return new ResponseEntity<Student>(studentPersisted, headers, HttpStatus.CREATED);
+        return new ResponseEntity<Student>(studentPersisted, HttpStatus.CREATED);
     }
 
     @RequestMapping(value = "/{studentId}", method = RequestMethod.GET)
-    public ResponseEntity<Student> getStudent(@PathVariable("studentId") final String id) {
+    public ResponseEntity<Student> getStudent(@PathVariable("studentId") final Long id) {
+        Student student = studentService.getById(id);
+        if (student == null) {
+            LOG.debug("Student with id " + id + " does not exists");
+            return new ResponseEntity<Student>(HttpStatus.NOT_FOUND);
+        }
 
-        final HttpHeaders headers = new HttpHeaders();
-
-        return new ResponseEntity<Student>(studentService.findOne(Long.parseLong(id)),
-                headers, HttpStatus.OK);
+        LOG.debug("Found student:: " + student);
+        return new ResponseEntity<Student>(student, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/{studentId}", method = RequestMethod.PUT)
     public ResponseEntity<Void> editStudent(@RequestBody Student student,
-                                            @PathVariable("studentId") final String id) {
-        Student studentUpdated = studentService.updateStudent(Long.parseLong(id), student);
-
-        return ResponseEntity.noContent().build();
+                                            @PathVariable("studentId") final Long id) {
+        Student studentUpdated = studentService.getById(id);
+        if (studentUpdated != null) {
+            studentService.updateStudent(id, student);
+            return new ResponseEntity<Void>(HttpStatus.OK);
+        } else {
+            LOG.debug("Student with id " + id + " does not exists");
+            return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @RequestMapping(value = "/{studentId}", method = RequestMethod.DELETE)
-    public ResponseEntity<Void> removeStudent(@PathVariable("studentId") final String id) {
-        final Student studentDelete = studentService.findOne(Long.parseLong(id));
+    public ResponseEntity<Void> removeStudent(@PathVariable("studentId") final Long id) {
+        final Student studentDelete = studentService.getById(id);
 
         if (studentDelete != null) {
-            LOG.debug("Removed from student collection id:{}", id);
-            studentService.removeStudent(studentDelete);
-        }
+            studentService.delete(id);
+            LOG.debug("Student with id " + id + " deleted");
 
-        // Note this return 204/No Content regardless the class has actually been deleted or not,
-        // to be idempotent
-        return ResponseEntity.noContent().build();
+            // Note this return 204/No Content regardless the class has actually been deleted or not,
+            // to be idempotent
+            return ResponseEntity.noContent().build();
+        } else {
+            LOG.debug("Student with id " + id + " does not exists");
+            return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @RequestMapping(value = "/{studentId}/classes", method = RequestMethod.GET)
-    public List<Class> listStudentsByClass(@PathVariable("studentId") final String id) {
-        Student studentEntity = studentService.findOne(Long.parseLong(id));
+    public ResponseEntity<List<Class>> listStudentsByClass(@PathVariable("studentId") final Long id) {
+        Student studentEntity = studentService.getById(id);
 
-        return studentEntity.getClasses();
+        if (studentEntity == null) {
+            LOG.debug("Student with id " + id + " does not exists");
+            return new ResponseEntity<List<Class>>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<List<Class>>(studentEntity.getClasses(), HttpStatus.OK);
     }
 }

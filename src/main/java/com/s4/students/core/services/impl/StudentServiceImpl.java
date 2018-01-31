@@ -8,6 +8,7 @@ import com.s4.students.core.utils.SearchCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Service
@@ -24,12 +25,12 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public Student findOne(Long id) {
-        return studentRepository.findOne(id);
+    public Student getById(Serializable id) {
+        return studentRepository.findOne((Long) id);
     }
 
     @Override
-    public Student createStudent(Student student) {
+    public Student save(Student student) {
         return studentRepository.save(student);
     }
 
@@ -44,12 +45,12 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public void removeStudent(Student student) {
-        studentRepository.delete(student);
+    public void delete(Serializable id) {
+        studentRepository.delete((Long) id);
     }
 
     @Override
-    public List<Student> getAllStudents() {
+    public List<Student> getAll() {
         return studentRepository.findAll();
     }
 

@@ -6,7 +6,6 @@ import com.s4.students.core.services.ClassService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,44 +26,69 @@ public class ClassController {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public List<Class> listAllClasses() {
-        return classService.getAllClasses();
+    public ResponseEntity<List<Class>> listAllClasses() {
+        LOG.debug("get all classes");
+        return new ResponseEntity<List<Class>>(classService.getAll(), HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<Class> createClass(@RequestBody Class classEntity) {
-        Class classPersisted = classService.createClass(classEntity);
+        Class classPersisted = classService.save(classEntity);
+        LOG.debug("Added:: " + classPersisted);
 
-        final HttpHeaders headers = new HttpHeaders();
+        return new ResponseEntity<Class>(classPersisted, HttpStatus.CREATED);
+    }
 
-        return new ResponseEntity<Class>(classPersisted, headers, HttpStatus.CREATED);
+    @RequestMapping(value = "/{classId}", method = RequestMethod.GET)
+    public ResponseEntity<Class> getClass(@PathVariable("classId") final Long id) {
+        Class classEntity = classService.getById(id);
+        if (classEntity == null) {
+            LOG.debug("ClassEntity with id " + id + " does not exists");
+            return new ResponseEntity<Class>(HttpStatus.NOT_FOUND);
+        }
+
+        LOG.debug("Found student:: " + classEntity);
+        return new ResponseEntity<Class>(classEntity, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/{classId}", method = RequestMethod.PUT)
     public ResponseEntity<Void> editStudent(@RequestBody Class classEntity,
-                                            @PathVariable("classId") final String id) {
-        Class studentUpdated = classService.updateClass(Long.parseLong(id), classEntity);
+                                            @PathVariable("classId") final Long id) {
+        Class classUpdated = classService.getById(id);
 
-        return ResponseEntity.noContent().build();
+        if (classUpdated != null) {
+            classService.updateClass(id, classEntity);
+            return new ResponseEntity<Void>(HttpStatus.OK);
+        } else {
+            LOG.debug("Class with id " + id + " does not exists");
+            return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @RequestMapping(value = "/{classId}", method = RequestMethod.DELETE)
-    public ResponseEntity<Void> deleteClass(@PathVariable("classId") final String id) {
+    public ResponseEntity<Void> deleteClass(@PathVariable("classId") final Long id) {
+        final Class classDelete = classService.getById(id);
 
-        final Class classDelete = classService.findOne(Long.parseLong(id));
         if (classDelete != null) {
-            LOG.debug("Removed from classEntity collection id:{}", id);
-            classService.removeClass(classDelete);
-        }
+            classService.delete(id);
+            LOG.debug("Class with id " + id + " deleted");
 
-        // Note this return 204/No Content regardless the class has actually been deleted or not, to be idempotent
-        return ResponseEntity.noContent().build();
+            return ResponseEntity.noContent().build();
+        } else {
+            LOG.debug("Class with id " + id + " does not exists");
+            return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @RequestMapping(value = "/{classId}/students", method = RequestMethod.GET)
-    public List<Student> listStudentsByClass(@PathVariable("classId") final String id) {
-        Class classEntity = classService.findOne(Long.parseLong(id));
+    public ResponseEntity<List<Student>> listStudentsByClass(@PathVariable("classId") final Long id) {
+        Class classEntity = classService.getById(id);
 
-        return classEntity.getStudents();
+        if (classEntity == null) {
+            LOG.debug("Class with id " + id + " does not exists");
+            return new ResponseEntity<List<Student>>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<List<Student>>(classEntity.getStudents(), HttpStatus.OK);
     }
 }
