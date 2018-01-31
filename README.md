@@ -45,7 +45,7 @@ You can find the next services
 
 I have used **Java** as a programming language because I think it is the language that best applies to object-oriented programming.
 
-I have used **Spring Framework** because it is the most complete java framework and popular with a large community.
+I have used **Spring Framework** because it is the most complete java framework and popular with a large community. It allows you to easily configure many things.
 
 ## Download source code
 
