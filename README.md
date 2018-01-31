@@ -1,9 +1,24 @@
 ## **Java practice studentSolution**
 
+## Summary
+
+Create a REST API for a system that assigns students to classes.
+
 ## What you'll need
   - A favorite IDE. I used Intellij IDEA
   - create a basic maven project
   - JDK 1.7 or later
+  
+## Technologies
+
+For the practice I used **Spring Framework.** Just I needed (Spring Boot, web, jpa)
+
+## database and model
+
+I used h2 database 
+
+Student = {id,  firstName, lastName}
+Class = {id, title, description}
 
 ## data loaded
 | (Id=1) English | (Id=2) Intro Progra |

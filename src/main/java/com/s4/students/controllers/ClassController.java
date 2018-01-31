@@ -28,7 +28,7 @@ public class ClassController {
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<List<Class>> listAllClasses() {
         LOG.debug("get all classes");
-        return new ResponseEntity<List<Class>>(classService.getAll(), HttpStatus.OK);
+        return new ResponseEntity<>(classService.getAll(), HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.POST)
@@ -36,7 +36,7 @@ public class ClassController {
         Class classPersisted = classService.save(classEntity);
         LOG.debug("Added:: " + classPersisted);
 
-        return new ResponseEntity<Class>(classPersisted, HttpStatus.CREATED);
+        return new ResponseEntity<>(classPersisted, HttpStatus.CREATED);
     }
 
     @RequestMapping(value = "/{classId}", method = RequestMethod.GET)
@@ -44,24 +44,24 @@ public class ClassController {
         Class classEntity = classService.getById(id);
         if (classEntity == null) {
             LOG.debug("ClassEntity with id " + id + " does not exists");
-            return new ResponseEntity<Class>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
         LOG.debug("Found student:: " + classEntity);
-        return new ResponseEntity<Class>(classEntity, HttpStatus.OK);
+        return new ResponseEntity<>(classEntity, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/{classId}", method = RequestMethod.PUT)
-    public ResponseEntity<Void> editStudent(@RequestBody Class classEntity,
+    public ResponseEntity<Class> editStudent(@RequestBody Class classEntity,
                                             @PathVariable("classId") final Long id) {
-        Class classUpdated = classService.getById(id);
+        Class classPersisted = classService.getById(id);
 
-        if (classUpdated != null) {
-            classService.updateClass(id, classEntity);
-            return new ResponseEntity<Void>(HttpStatus.OK);
+        if (classPersisted != null) {
+            Class classUpdated = classService.updateClass(id, classEntity);
+            return new ResponseEntity<>(classUpdated, HttpStatus.OK);
         } else {
             LOG.debug("Class with id " + id + " does not exists");
-            return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
@@ -76,7 +76,7 @@ public class ClassController {
             return ResponseEntity.noContent().build();
         } else {
             LOG.debug("Class with id " + id + " does not exists");
-            return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
@@ -86,9 +86,9 @@ public class ClassController {
 
         if (classEntity == null) {
             LOG.debug("Class with id " + id + " does not exists");
-            return new ResponseEntity<List<Student>>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        return new ResponseEntity<List<Student>>(classEntity.getStudents(), HttpStatus.OK);
+        return new ResponseEntity<>(classEntity.getStudents(), HttpStatus.OK);
     }
 }

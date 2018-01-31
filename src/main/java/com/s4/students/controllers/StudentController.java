@@ -42,10 +42,10 @@ public class StudentController {
             }
 
             LOG.debug("search students...");
-            return new ResponseEntity<List<Student>>(studentService.searchStudents(params), HttpStatus.OK);
+            return new ResponseEntity<>(studentService.searchStudents(params), HttpStatus.OK);
         } else {
             LOG.debug("get all students");
-            return new ResponseEntity<List<Student>>(studentService.getAll(), HttpStatus.OK);
+            return new ResponseEntity<>(studentService.getAll(), HttpStatus.OK);
         }
     }
 
@@ -54,7 +54,7 @@ public class StudentController {
         Student studentPersisted = studentService.save(student);
         LOG.debug("Added:: " + student);
 
-        return new ResponseEntity<Student>(studentPersisted, HttpStatus.CREATED);
+        return new ResponseEntity<>(studentPersisted, HttpStatus.CREATED);
     }
 
     @RequestMapping(value = "/{studentId}", method = RequestMethod.GET)
@@ -62,23 +62,23 @@ public class StudentController {
         Student student = studentService.getById(id);
         if (student == null) {
             LOG.debug("Student with id " + id + " does not exists");
-            return new ResponseEntity<Student>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
         LOG.debug("Found student:: " + student);
-        return new ResponseEntity<Student>(student, HttpStatus.OK);
+        return new ResponseEntity<>(student, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/{studentId}", method = RequestMethod.PUT)
-    public ResponseEntity<Void> editStudent(@RequestBody Student student,
+    public ResponseEntity<Student> editStudent(@RequestBody Student student,
                                             @PathVariable("studentId") final Long id) {
-        Student studentUpdated = studentService.getById(id);
-        if (studentUpdated != null) {
-            studentService.updateStudent(id, student);
-            return new ResponseEntity<Void>(HttpStatus.OK);
+        Student studentPersisted = studentService.getById(id);
+        if (studentPersisted != null) {
+            Student studentUpdated = studentService.updateStudent(id, student);
+            return new ResponseEntity<>(studentUpdated, HttpStatus.OK);
         } else {
             LOG.debug("Student with id " + id + " does not exists");
-            return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
@@ -95,7 +95,7 @@ public class StudentController {
             return ResponseEntity.noContent().build();
         } else {
             LOG.debug("Student with id " + id + " does not exists");
-            return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
@@ -105,9 +105,9 @@ public class StudentController {
 
         if (studentEntity == null) {
             LOG.debug("Student with id " + id + " does not exists");
-            return new ResponseEntity<List<Class>>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        return new ResponseEntity<List<Class>>(studentEntity.getClasses(), HttpStatus.OK);
+        return new ResponseEntity<>(studentEntity.getClasses(), HttpStatus.OK);
     }
 }
