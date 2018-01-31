@@ -1,8 +1,8 @@
-package com.test.students.core.services.impl;
+package com.s4.students.core.services.impl;
 
-import com.test.students.core.entities.Class;
-import com.test.students.core.repositories.ClassRepository;
-import com.test.students.core.services.ClassService;
+import com.s4.students.core.entities.Class;
+import com.s4.students.core.repositories.ClassRepository;
+import com.s4.students.core.services.ClassService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

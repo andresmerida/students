@@ -1,4 +1,4 @@
-package com.test.students.core.entities;
+package com.s4.students.core.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.springframework.data.jpa.domain.AbstractPersistable;

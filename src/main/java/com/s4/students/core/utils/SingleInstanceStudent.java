@@ -1,6 +1,6 @@
-package com.test.students.core.utils;
+package com.s4.students.core.utils;
 
-import com.test.students.core.entities.Student;
+import com.s4.students.core.entities.Student;
 
 public class SingleInstanceStudent {
     //create an object of SingleCreateStudent

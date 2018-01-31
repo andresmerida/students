@@ -1,6 +1,6 @@
-package com.test.students.core.services;
+package com.s4.students.core.services;
 
-import com.test.students.core.entities.Class;
+import com.s4.students.core.entities.Class;
 
 import java.util.List;
 

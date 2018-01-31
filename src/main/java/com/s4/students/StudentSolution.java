@@ -1,10 +1,10 @@
-package com.test.students;
+package com.s4.students;
 
-import com.test.students.core.entities.Class;
-import com.test.students.core.entities.Student;
-import com.test.students.core.repositories.ClassRepository;
-import com.test.students.core.repositories.StudentRepository;
-import com.test.students.core.utils.SingleInstanceStudent;
+import com.s4.students.core.entities.Class;
+import com.s4.students.core.entities.Student;
+import com.s4.students.core.repositories.ClassRepository;
+import com.s4.students.core.repositories.StudentRepository;
+import com.s4.students.core.utils.SingleInstanceStudent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

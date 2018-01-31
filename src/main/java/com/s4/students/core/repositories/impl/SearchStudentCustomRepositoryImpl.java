@@ -1,8 +1,8 @@
-package com.test.students.core.repositories.impl;
+package com.s4.students.core.repositories.impl;
 
-import com.test.students.core.entities.Student;
-import com.test.students.core.repositories.SearchStudentCustomRepository;
-import com.test.students.core.utils.SearchCriteria;
+import com.s4.students.core.entities.Student;
+import com.s4.students.core.repositories.SearchStudentCustomRepository;
+import com.s4.students.core.utils.SearchCriteria;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;

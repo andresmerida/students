@@ -1,6 +1,6 @@
-package com.test.students.core.repositories;
+package com.s4.students.core.repositories;
 
-import com.test.students.core.entities.Student;
+import com.s4.students.core.entities.Student;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface StudentRepository extends JpaRepository<Student, Long> {

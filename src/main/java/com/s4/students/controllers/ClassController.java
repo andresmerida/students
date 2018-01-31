@@ -1,8 +1,8 @@
-package com.test.students.controllers;
+package com.s4.students.controllers;
 
-import com.test.students.core.entities.Class;
-import com.test.students.core.entities.Student;
-import com.test.students.core.services.ClassService;
+import com.s4.students.core.entities.Class;
+import com.s4.students.core.entities.Student;
+import com.s4.students.core.services.ClassService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

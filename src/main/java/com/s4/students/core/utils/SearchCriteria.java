@@ -1,4 +1,4 @@
-package com.test.students.core.utils;
+package com.s4.students.core.utils;
 
 public class SearchCriteria {
     private String key;
