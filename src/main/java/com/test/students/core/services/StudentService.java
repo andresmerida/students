@@ -1,6 +1,7 @@
 package com.test.students.core.services;
 
 import com.test.students.core.entities.Student;
+import com.test.students.core.utils.SearchCriteria;
 
 import java.util.List;
 
@@ -16,7 +17,5 @@ public interface StudentService {
 
     List<Student> getAllStudents();
 
-    List<Student> findBy(String field, String value);
-
-    List<Student> findByFirstNameAndLastName(String firstName, String lastName);
+    List<Student> searchStudents(List<SearchCriteria> params);
 }

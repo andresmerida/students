@@ -3,6 +3,7 @@ package com.test.students.controllers;
 import com.test.students.core.entities.Class;
 import com.test.students.core.entities.Student;
 import com.test.students.core.services.StudentService;
+import com.test.students.core.utils.SearchCriteria;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 
 @RestController
 @RequestMapping("/students")
@@ -27,8 +32,21 @@ public class StudentController {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public List<Student> listAllStudents() {
-        return studentService.getAllStudents();
+    public List<Student> listAllStudents(@RequestParam(value = "search", required = false) String search) {
+        if (search != null) {
+            List<SearchCriteria> params = new ArrayList<SearchCriteria>();
+            Pattern pattern = Pattern.compile("(\\w+?)(:|<|>)(\\w+?),");
+            Matcher matcher = pattern.matcher(search + ",");
+            while (matcher.find()) {
+                params.add(new SearchCriteria(matcher.group(1), matcher.group(2), matcher.group(3)));
+            }
+
+            LOG.debug("search students...");
+            return studentService.searchStudents(params);
+        } else {
+            LOG.debug("get all students");
+            return studentService.getAllStudents();
+        }
     }
 
     @RequestMapping(method = RequestMethod.POST)
@@ -66,7 +84,8 @@ public class StudentController {
             studentService.removeStudent(studentDelete);
         }
 
-        // Note this return 204/No Content regardless the class has actually been deleted or not, to be idempotent
+        // Note this return 204/No Content regardless the class has actually been deleted or not,
+        // to be idempotent
         return ResponseEntity.noContent().build();
     }
 

@@ -1,22 +1,26 @@
 package com.test.students.core.services.impl;
 
 import com.test.students.core.entities.Student;
+import com.test.students.core.repositories.SearchStudentCustomRepository;
 import com.test.students.core.repositories.StudentRepository;
 import com.test.students.core.services.StudentService;
+import com.test.students.core.utils.SearchCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class StudentServiceImpl implements StudentService {
 
     private final StudentRepository studentRepository;
+    private final SearchStudentCustomRepository searchStudentCustomRepository;
 
     @Autowired
-    public StudentServiceImpl(final StudentRepository studentRepository) {
+    public StudentServiceImpl(final StudentRepository studentRepository,
+                              final SearchStudentCustomRepository searchStudentCustomRepository) {
         this.studentRepository = studentRepository;
+        this.searchStudentCustomRepository = searchStudentCustomRepository;
     }
 
     @Override
@@ -50,12 +54,8 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public List<Student> findBy(String field, String value) {
-        return new ArrayList<>();
+    public List<Student> searchStudents(List<SearchCriteria> params) {
+        return searchStudentCustomRepository.searchStudent(params);
     }
 
-    @Override
-    public List<Student> findByFirstNameAndLastName(String firstName, String lastName) {
-        return new ArrayList<>();
-    }
 }
